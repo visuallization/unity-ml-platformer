@@ -12,7 +12,7 @@ public class SimpleCharacterAgent: Agent
     private SimpleCharacterController characterController;
     new private Rigidbody rigidbody;
 
-    private GameObject platform;
+    private Queue<GameObject> platforms;
 
     /// <summary>
     /// Called once when the agent is first initialized
@@ -23,6 +23,7 @@ public class SimpleCharacterAgent: Agent
         startPosition = transform.position;
         characterController = GetComponent<SimpleCharacterController>();
         rigidbody = GetComponent<Rigidbody>();
+        platforms = new Queue<GameObject>();
     }
 
     /// <summary>
@@ -36,13 +37,21 @@ public class SimpleCharacterAgent: Agent
         transform.rotation = Quaternion.Euler(Vector3.up * Random.Range(0f, 360f));
         rigidbody.velocity = Vector3.zero;
         // Reset platform position (5 meters away from the agent in a random direction)
-        Destroy(platform);
+        GameObject platform;
+        if (platforms.Count > 0)
+        {
+            platform = platforms.Dequeue();
+            Destroy(platform);
+        }
+
         platform = Instantiate(
             platformPrefab,
             new Vector3(startPosition.x, platformPrefab.transform.position.y, startPosition.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * 5f,
             Quaternion.identity,
             transform.parent
         );
+
+        platforms.Enqueue(platform);
         //platform.transform.position = new Vector3(startPosition.x, platform.transform.position.y, startPosition.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * 5f;
     }
 
@@ -102,13 +111,20 @@ public class SimpleCharacterAgent: Agent
             AddReward(1f);
 
             // Destroy platform & create a new one
-            Destroy(platform);
+            GameObject platform;
+            if (platforms.Count >= 2)
+            {
+                platform = platforms.Dequeue();
+                Destroy(platform);
+            }
+
             platform = Instantiate(
                 platformPrefab,
                 new Vector3(startPosition.x, platformPrefab.transform.position.y, startPosition.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * 5f,
                 Quaternion.identity,
                 transform.parent
             );
+            platforms.Enqueue(platform);
             //EndEpisode();
         }
     }
