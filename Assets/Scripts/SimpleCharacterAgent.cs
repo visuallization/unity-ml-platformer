@@ -27,7 +27,6 @@ public class SimpleCharacterAgent: Agent
     /// </summary>
     public override void OnEpisodeBegin()
     {
-        //base.OnEpisodeBegin();
         transform.position = startPosition;
         transform.rotation = Quaternion.Euler(Vector3.up * Random.Range(0f, 360f));
         rigidbody.velocity = Vector3.zero;
@@ -42,7 +41,6 @@ public class SimpleCharacterAgent: Agent
     /// <param name="actionsOut">The actions parsed from keyboard input</param>
     public override void Heuristic(in ActionBuffers actionsOut)
     {
-        //base.Heuristic(actionsOut);
         // Read input values and round them. GetAxisRaw works better in this case
         // because of the DecisionRequester, which only gets new decisions periodically.
         int vertical = Mathf.RoundToInt(Input.GetAxisRaw("Vertical"));
@@ -91,7 +89,8 @@ public class SimpleCharacterAgent: Agent
         if (other.tag == "collectible")
         {
             AddReward(1f);
-            EndEpisode();
+            platform.transform.position = new Vector3(startPosition.x, platform.transform.position.y, startPosition.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * 5f;
+            //EndEpisode();
         }
     }
 }
