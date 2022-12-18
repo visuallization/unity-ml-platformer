@@ -78,7 +78,6 @@ public class SimpleCharacterController : MonoBehaviour
         if (IsGrounded)
         {
             rigidbody.velocity = Vector3.zero;
-            Debug.Log(JumpInput);
 
             // Jump
             if (JumpInput && allowJump)

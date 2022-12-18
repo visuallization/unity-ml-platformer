@@ -1,15 +1,18 @@
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class SimpleCharacterAgent: Agent
 {
-    [Tooltip("The platform, which will be moved around on every reset")]
-    public GameObject platform;
+    [Tooltip("The platform, which will be instantiated & moved around on every reset")]
+    public GameObject platformPrefab;
 
     private Vector3 startPosition;
     private SimpleCharacterController characterController;
     new private Rigidbody rigidbody;
+
+    private GameObject platform;
 
     /// <summary>
     /// Called once when the agent is first initialized
@@ -27,12 +30,20 @@ public class SimpleCharacterAgent: Agent
     /// </summary>
     public override void OnEpisodeBegin()
     {
+        Debug.Log("New episode");
+
         transform.position = startPosition;
         transform.rotation = Quaternion.Euler(Vector3.up * Random.Range(0f, 360f));
         rigidbody.velocity = Vector3.zero;
-
         // Reset platform position (5 meters away from the agent in a random direction)
-        platform.transform.position = new Vector3(startPosition.x, platform.transform.position.y, startPosition.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * 5f;
+        Destroy(platform);
+        platform = Instantiate(
+            platformPrefab,
+            new Vector3(startPosition.x, platformPrefab.transform.position.y, startPosition.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * 5f,
+            Quaternion.identity,
+            transform.parent
+        );
+        //platform.transform.position = new Vector3(startPosition.x, platform.transform.position.y, startPosition.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * 5f;
     }
 
     /// <summary>
@@ -89,7 +100,15 @@ public class SimpleCharacterAgent: Agent
         if (other.tag == "collectible")
         {
             AddReward(1f);
-            platform.transform.position = new Vector3(startPosition.x, platform.transform.position.y, startPosition.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * 5f;
+
+            // Destroy platform & create a new one
+            Destroy(platform);
+            platform = Instantiate(
+                platformPrefab,
+                new Vector3(startPosition.x, platformPrefab.transform.position.y, startPosition.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * 5f,
+                Quaternion.identity,
+                transform.parent
+            );
             //EndEpisode();
         }
     }
