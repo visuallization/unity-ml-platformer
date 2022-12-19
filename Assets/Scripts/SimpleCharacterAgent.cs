@@ -7,6 +7,8 @@ public class SimpleCharacterAgent: Agent
 {
     [Tooltip("The platform, which will be instantiated & moved around on every reset")]
     public GameObject platformPrefab;
+    public GameObject startPlatform;
+    public float platformSpawnDistance = 3f;
 
     private Vector3 startPosition;
     private SimpleCharacterController characterController;
@@ -31,28 +33,27 @@ public class SimpleCharacterAgent: Agent
     /// </summary>
     public override void OnEpisodeBegin()
     {
-        Debug.Log("New episode");
+        startPlatform.SetActive(true);
 
         transform.position = startPosition;
         transform.rotation = Quaternion.Euler(Vector3.up * Random.Range(0f, 360f));
         rigidbody.velocity = Vector3.zero;
         // Reset platform position (5 meters away from the agent in a random direction)
-        GameObject platform;
-        if (platforms.Count > 0)
-        {
-            platform = platforms.Dequeue();
-            Destroy(platform);
-        }
 
-        platform = Instantiate(
+        foreach (GameObject p in platforms)
+        {
+            Destroy(p);
+        }
+        platforms.Clear();
+
+        GameObject platform = Instantiate(
             platformPrefab,
-            new Vector3(startPosition.x, platformPrefab.transform.position.y, startPosition.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * 5f,
+            new Vector3(startPosition.x, platformPrefab.transform.position.y, startPosition.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * platformSpawnDistance,
             Quaternion.identity,
             transform.parent
         );
 
         platforms.Enqueue(platform);
-        //platform.transform.position = new Vector3(startPosition.x, platform.transform.position.y, startPosition.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * 5f;
     }
 
     /// <summary>
@@ -110,6 +111,11 @@ public class SimpleCharacterAgent: Agent
         {
             AddReward(1f);
 
+            if (startPlatform.activeSelf)
+            {
+                startPlatform.SetActive(false);
+            }
+
             // Destroy platform & create a new one
             GameObject platform;
             if (platforms.Count >= 2)
@@ -120,12 +126,16 @@ public class SimpleCharacterAgent: Agent
 
             platform = Instantiate(
                 platformPrefab,
-                new Vector3(startPosition.x, platformPrefab.transform.position.y, startPosition.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * 5f,
+                new Vector3(startPosition.x, platformPrefab.transform.position.y, startPosition.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * platformSpawnDistance,
                 Quaternion.identity,
                 transform.parent
             );
             platforms.Enqueue(platform);
-            //EndEpisode();
+        }
+
+        if (other.tag == "gameover")
+        {
+            EndEpisode();
         }
     }
 }
