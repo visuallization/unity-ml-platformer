@@ -48,7 +48,7 @@ public class SimpleCharacterAgent: Agent
 
         GameObject platform = Instantiate(
             platformPrefab,
-            new Vector3(startPosition.x, platformPrefab.transform.position.y, startPosition.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * platformSpawnDistance,
+            new Vector3(transform.position.x, platformPrefab.transform.position.y, transform.position.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * platformSpawnDistance,
             Quaternion.identity,
             transform.parent
         );
@@ -81,14 +81,6 @@ public class SimpleCharacterAgent: Agent
     /// <param name="actions">The actions received</param>
     public override void OnActionReceived(ActionBuffers actions)
     {
-        //base.OnActionReceived(actions);
-        // Punish and end episode if the agent strays too far
-        if (Vector3.Distance(startPosition, transform.position) > 10f)
-        {
-            AddReward(-1f);
-            EndEpisode();
-        }
-
         // Convert actions from Discrete (0, 1, 2) to expected input values (-1, 0, +1)
         // of the character controller
         float vertical = actions.DiscreteActions[0] <= 1 ? actions.DiscreteActions[0] : -1;
@@ -126,7 +118,7 @@ public class SimpleCharacterAgent: Agent
 
             platform = Instantiate(
                 platformPrefab,
-                new Vector3(startPosition.x, platformPrefab.transform.position.y, startPosition.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * platformSpawnDistance,
+                new Vector3(transform.position.x, platformPrefab.transform.position.y, transform.position.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * platformSpawnDistance,
                 Quaternion.identity,
                 transform.parent
             );
@@ -135,6 +127,8 @@ public class SimpleCharacterAgent: Agent
 
         if (other.tag == "gameover")
         {
+
+            //AddReward(-1f);
             EndEpisode();
         }
     }
