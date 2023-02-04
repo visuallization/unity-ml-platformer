@@ -1,15 +1,20 @@
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class SimpleCharacterAgent: Agent
 {
-    [Tooltip("The platform, which will be moved around on every reset")]
-    public GameObject platform;
+    [Tooltip("The platform, which will be instantiated & moved around on every reset")]
+    public GameObject platformPrefab;
+    public GameObject startPlatform;
+    public float platformSpawnDistance = 3f;
 
     private Vector3 startPosition;
     private SimpleCharacterController characterController;
     new private Rigidbody rigidbody;
+
+    private Queue<GameObject> platforms;
 
     /// <summary>
     /// Called once when the agent is first initialized
@@ -20,6 +25,7 @@ public class SimpleCharacterAgent: Agent
         startPosition = transform.position;
         characterController = GetComponent<SimpleCharacterController>();
         rigidbody = GetComponent<Rigidbody>();
+        platforms = new Queue<GameObject>();
     }
 
     /// <summary>
@@ -27,13 +33,27 @@ public class SimpleCharacterAgent: Agent
     /// </summary>
     public override void OnEpisodeBegin()
     {
-        //base.OnEpisodeBegin();
+        startPlatform.SetActive(true);
+
         transform.position = startPosition;
         transform.rotation = Quaternion.Euler(Vector3.up * Random.Range(0f, 360f));
         rigidbody.velocity = Vector3.zero;
-
         // Reset platform position (5 meters away from the agent in a random direction)
-        platform.transform.position = new Vector3(startPosition.x, platform.transform.position.y, startPosition.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * 5f;
+
+        foreach (GameObject p in platforms)
+        {
+            Destroy(p);
+        }
+        platforms.Clear();
+
+        GameObject platform = Instantiate(
+            platformPrefab,
+            new Vector3(transform.position.x, platformPrefab.transform.position.y, transform.position.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * platformSpawnDistance,
+            Quaternion.identity,
+            transform.parent
+        );
+
+        platforms.Enqueue(platform);
     }
 
     /// <summary>
@@ -42,7 +62,6 @@ public class SimpleCharacterAgent: Agent
     /// <param name="actionsOut">The actions parsed from keyboard input</param>
     public override void Heuristic(in ActionBuffers actionsOut)
     {
-        //base.Heuristic(actionsOut);
         // Read input values and round them. GetAxisRaw works better in this case
         // because of the DecisionRequester, which only gets new decisions periodically.
         int vertical = Mathf.RoundToInt(Input.GetAxisRaw("Vertical"));
@@ -62,14 +81,6 @@ public class SimpleCharacterAgent: Agent
     /// <param name="actions">The actions received</param>
     public override void OnActionReceived(ActionBuffers actions)
     {
-        //base.OnActionReceived(actions);
-        // Punish and end episode if the agent strays too far
-        if (Vector3.Distance(startPosition, transform.position) > 10f)
-        {
-            AddReward(-1f);
-            EndEpisode();
-        }
-
         // Convert actions from Discrete (0, 1, 2) to expected input values (-1, 0, +1)
         // of the character controller
         float vertical = actions.DiscreteActions[0] <= 1 ? actions.DiscreteActions[0] : -1;
@@ -91,6 +102,33 @@ public class SimpleCharacterAgent: Agent
         if (other.tag == "collectible")
         {
             AddReward(1f);
+
+            if (startPlatform.activeSelf)
+            {
+                startPlatform.SetActive(false);
+            }
+
+            // Destroy platform & create a new one
+            GameObject platform;
+            if (platforms.Count >= 2)
+            {
+                platform = platforms.Dequeue();
+                Destroy(platform);
+            }
+
+            platform = Instantiate(
+                platformPrefab,
+                new Vector3(transform.position.x, platformPrefab.transform.position.y, transform.position.z) + Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * platformSpawnDistance,
+                Quaternion.identity,
+                transform.parent
+            );
+            platforms.Enqueue(platform);
+        }
+
+        if (other.tag == "gameover")
+        {
+
+            //AddReward(-1f);
             EndEpisode();
         }
     }

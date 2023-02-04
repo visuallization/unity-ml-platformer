@@ -50,6 +50,7 @@ public class SimpleCharacterController : MonoBehaviour
         IsGrounded = false;
         float capsuleHeight = Mathf.Max(capsuleCollider.radius * 2f, capsuleCollider.height);
         Vector3 capsuleBottom = transform.TransformPoint(capsuleCollider.center - Vector3.up * capsuleHeight / 2f);
+        Debug.DrawLine(transform.position, capsuleBottom, new Color(1, 0, 0));
         float radius = transform.TransformVector(capsuleCollider.radius, 0f, 0f).magnitude;
         Ray ray = new Ray(capsuleBottom + transform.up * .01f, -transform.up);
         RaycastHit hit;
@@ -78,7 +79,6 @@ public class SimpleCharacterController : MonoBehaviour
         if (IsGrounded)
         {
             rigidbody.velocity = Vector3.zero;
-            Debug.Log(JumpInput);
 
             // Jump
             if (JumpInput && allowJump)
