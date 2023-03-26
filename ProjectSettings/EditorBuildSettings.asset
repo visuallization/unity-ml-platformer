@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/PlatformsInTheAirBatchEnvs.unity
+    path: Assets/Scenes/AirCollectorBatchEnvs.unity
     guid: 2492b14ce48ce214390f03087a0a0dfa
   m_configObjects: {}
