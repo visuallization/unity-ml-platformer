@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/PlatformsInTheAirBatchEnvs.unity
+    guid: 2492b14ce48ce214390f03087a0a0dfa
   m_configObjects: {}
