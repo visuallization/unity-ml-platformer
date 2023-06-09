@@ -1,9 +1,10 @@
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
+using Unity.MLAgents.Sensors;
 using UnityEngine;
 using System.Collections.Generic;
 
-public class SimpleCharacterAgent: Agent
+public class AirPlatformerAgent: Agent
 {
     [Tooltip("The platform, which will be instantiated & moved around on every reset")]
     public GameObject platformPrefab;
@@ -15,6 +16,8 @@ public class SimpleCharacterAgent: Agent
     new private Rigidbody rigidbody;
 
     private Queue<GameObject> platforms;
+    private GameObject goalPlatform;
+    private float bestGoalDistance = 0;
 
     /// <summary>
     /// Called once when the agent is first initialized
@@ -26,6 +29,8 @@ public class SimpleCharacterAgent: Agent
         characterController = GetComponent<SimpleCharacterController>();
         rigidbody = GetComponent<Rigidbody>();
         platforms = new Queue<GameObject>();
+        goalPlatform = null;
+        ResetBestGoalDistance();
     }
 
     /// <summary>
@@ -54,6 +59,8 @@ public class SimpleCharacterAgent: Agent
         );
 
         platforms.Enqueue(platform);
+        goalPlatform = platform;
+        ResetBestGoalDistance();
     }
 
     /// <summary>
@@ -69,10 +76,12 @@ public class SimpleCharacterAgent: Agent
         bool jump = Input.GetKey(KeyCode.Space);
 
         // Convert the actions to discrete choices (0, 1, 2)
-        ActionSegment<int> actions = actionsOut.DiscreteActions;
-        actions[0] = vertical >= 0 ? vertical : 2;
-        actions[1] = horizontal >= 0 ? horizontal : 2;
-        actions[2] = jump ? 1 : 0;
+        ActionSegment<float> continuousActions = actionsOut.ContinuousActions;
+        ActionSegment<int> discreteActions = actionsOut.DiscreteActions;
+
+        continuousActions[0] = vertical;
+        continuousActions[1] = horizontal;
+        discreteActions[0] = jump ? 1 : 0;
     }
 
     /// <summary>
@@ -83,13 +92,38 @@ public class SimpleCharacterAgent: Agent
     {
         // Convert actions from Discrete (0, 1, 2) to expected input values (-1, 0, +1)
         // of the character controller
-        float vertical = actions.DiscreteActions[0] <= 1 ? actions.DiscreteActions[0] : -1;
-        float horizontal = actions.DiscreteActions[1] <= 1 ? actions.DiscreteActions[1] : -1;
-        bool jump = actions.DiscreteActions[2] > 0;
+        float vertical = Mathf.Clamp(actions.ContinuousActions[0], -1f, 1f);
+        float horizontal = Mathf.Clamp(actions.ContinuousActions[1], -1f, 1f);
+        bool jump = actions.DiscreteActions[0] > 0;
 
         characterController.ForwardInput = vertical;
         characterController.TurnInput = horizontal;
         characterController.JumpInput = jump;
+
+        UpdateRewardPerStep();
+    }
+
+    /// <summary>
+    /// Add more observations
+    /// Unity ML Agents observes the values of RayPerceptionSensors automatically
+    /// This method allows to add more observations
+    /// </summary>
+    /// <param name="sensor">Sensor to add observations to</param>
+    public override void CollectObservations(VectorSensor sensor)
+    {
+        float goalDistance = 0.0f;
+        Vector3 goalVector = Vector3.zero;
+        goalDistance = Vector3.Distance(transform.position, goalPlatform.transform.position);
+        goalDistance = Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(goalPlatform.transform.position.x, goalPlatform.transform.position.z));
+        goalDistance = Mathf.Clamp(goalDistance, 0, platformSpawnDistance) / platformSpawnDistance;
+        goalVector = (goalPlatform.transform.position - transform.position).normalized;
+        //Debug.Log(transform.position);
+        //Debug.Log(goalPlatform.transform.position);
+        //Debug.Log(goalDistance);
+
+        sensor.AddObservation(goalDistance);
+        sensor.AddObservation(goalVector);
+        sensor.AddObservation(characterController.IsGrounded);
     }
 
     /// <summary>
@@ -123,6 +157,8 @@ public class SimpleCharacterAgent: Agent
                 transform.parent
             );
             platforms.Enqueue(platform);
+            goalPlatform = platform;
+            ResetBestGoalDistance();
         }
 
         if (other.tag == "gameover")
@@ -131,5 +167,29 @@ public class SimpleCharacterAgent: Agent
             //AddReward(-1f);
             EndEpisode();
         }
+    }
+
+    private void UpdateRewardPerStep() {
+        AddReward(-0.01f);
+        AddReward(ShapingReward());
+    }
+
+    private float ShapingReward() {
+        float reward = 0f;
+        float goalDistance = 0f;
+
+        goalDistance = Vector3.Distance(transform.position, goalPlatform.transform.position);
+        goalDistance = Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(goalPlatform.transform.position.x, goalPlatform.transform.position.z));
+
+        if (goalDistance < bestGoalDistance) {
+            reward += bestGoalDistance - goalDistance;
+            bestGoalDistance = goalDistance;
+        }
+        
+        return reward;
+    }
+
+    private void ResetBestGoalDistance() {
+        bestGoalDistance = platformSpawnDistance;
     }
 }

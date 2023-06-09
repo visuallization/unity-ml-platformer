@@ -1323,6 +1323,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Environment (0)
       objectReference: {fileID: 0}
+    - target: {fileID: 8130226621721575608, guid: 670f0a08d5270ba44b027101c1bedda7, type: 3}
+      propertyPath: m_Model
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
