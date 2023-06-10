@@ -19,6 +19,10 @@ public class AirPlatformerAgent: Agent
     private GameObject goalPlatform;
     private float bestGoalDistance = 0;
 
+    void FixedUpdate() {
+        UpdateRewardPerStep();
+    }
+
     /// <summary>
     /// Called once when the agent is first initialized
     /// </summary>
@@ -99,8 +103,6 @@ public class AirPlatformerAgent: Agent
         characterController.ForwardInput = vertical;
         characterController.TurnInput = horizontal;
         characterController.JumpInput = jump;
-
-        UpdateRewardPerStep();
     }
 
     /// <summary>
@@ -135,7 +137,7 @@ public class AirPlatformerAgent: Agent
         // If the other object is a collectible, reward and end episode
         if (other.tag == "collectible")
         {
-            AddReward(1f);
+            AddReward(100f);
 
             if (startPlatform.activeSelf)
             {
@@ -178,14 +180,16 @@ public class AirPlatformerAgent: Agent
         float reward = 0f;
         float goalDistance = 0f;
 
-        goalDistance = Vector3.Distance(transform.position, goalPlatform.transform.position);
-        goalDistance = Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(goalPlatform.transform.position.x, goalPlatform.transform.position.z));
+        if (goalPlatform) {
+            goalDistance = Vector3.Distance(transform.position, goalPlatform.transform.position);
+            goalDistance = Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(goalPlatform.transform.position.x, goalPlatform.transform.position.z));
 
-        if (goalDistance < bestGoalDistance) {
-            reward += bestGoalDistance - goalDistance;
-            bestGoalDistance = goalDistance;
+            if (goalDistance < bestGoalDistance) {
+                reward += bestGoalDistance - goalDistance;
+                bestGoalDistance = goalDistance;
+            }
         }
-        
+
         return reward;
     }
 
