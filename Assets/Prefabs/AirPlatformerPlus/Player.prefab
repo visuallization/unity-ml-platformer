@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 5612259610320035373}
   - component: {fileID: 4256368212951321716}
   - component: {fileID: 5308462510879282467}
+  - component: {fileID: 7337802394185890334}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -388,6 +389,20 @@ MonoBehaviour:
   platformPrefab: {fileID: 1703101147579451556, guid: 4acdd45c6898fc14ab7a6ef8fc8b19f3, type: 3}
   startPlatform: {fileID: 0}
   platformSpawnDistance: 15
+--- !u!114 &7337802394185890334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2460410056651279314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DecisionPeriod: 8
+  TakeActionsBetweenDecisions: 1
 --- !u!1 &4740414669880537242
 GameObject:
   m_ObjectHideFlags: 0
