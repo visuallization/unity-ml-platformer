@@ -328,7 +328,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 4000
+  MaxStep: 20000
   platformPrefab: {fileID: 2738722986273206547, guid: 4acdd45c6898fc14ab7a6ef8fc8b19f3, type: 3}
   startPlatform: {fileID: 0}
   resetArea: {fileID: 0}

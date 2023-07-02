@@ -22,24 +22,10 @@ public class AirPlatformerAgent: Agent
     private GameObject goalPlatform;
     private float bestGoalDistance = 0;
 
-    private int steps = 0;
-    private int MAX_STEPS = 20000;
-
     private int BOUNDARY_OFFSET = 10;
-
-    private int SCALE = 5;
 
     void FixedUpdate() {
         UpdateRewardPerStep();
-
-        if (steps > MAX_STEPS) {
-            steps = 0;
-            EndEpisode();
-        }
-
-        // if (gameObject.transform.position.y < -1) {
-        //     EndEpisode();
-        // }
     }
 
     /// <summary>
@@ -50,9 +36,8 @@ public class AirPlatformerAgent: Agent
         base.Initialize();
         // Random.InitState(42);
         boundaries = resetArea.bounds.size;
-        Debug.Log(boundaries);
-	    boundaries.x = (boundaries.x - BOUNDARY_OFFSET) / SCALE;
-	    boundaries.z = (boundaries.z - BOUNDARY_OFFSET) / SCALE;
+	    boundaries.x = (boundaries.x - BOUNDARY_OFFSET) / transform.parent.localScale.x;
+	    boundaries.z = (boundaries.z - BOUNDARY_OFFSET) / transform.parent.localScale.x;
         startPosition = transform.position;
         characterController = GetComponent<SimpleCharacterController>();
         rigidbody = GetComponent<Rigidbody>();
@@ -183,9 +168,8 @@ public class AirPlatformerAgent: Agent
         Vector3 spawnPosition = origin + rotation * Vector3.forward * platformSpawnDistance;
         Vector3 localSpawnPosition = localOrigin + rotation * Vector3.forward * platformSpawnDistance;
 
-        Debug.Log(Mathf.Abs(localSpawnPosition.x) + " " + Mathf.Abs(localSpawnPosition.z));
+        // Get a new position if current spawn position would be out of bounds
         while (Mathf.Abs(localSpawnPosition.x) > boundaries.x || Mathf.Abs(localSpawnPosition.z) > boundaries.z) {
-            Debug.Log("respawn");
             rotation = Quaternion.Euler(Vector3.up * Random.Range(0f, 360f));
             spawnPosition = origin + rotation * Vector3.forward * platformSpawnDistance;
             localSpawnPosition = localOrigin + rotation * Vector3.forward * platformSpawnDistance;
