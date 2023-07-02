@@ -231,7 +231,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6874056780256812727, guid: a52213ff04d5f4dafb5c0e305fd8ac36, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.344
+      value: 1.1
       objectReference: {fileID: 0}
     - target: {fileID: 6874056780256812727, guid: a52213ff04d5f4dafb5c0e305fd8ac36, type: 3}
       propertyPath: m_LocalPosition.z
@@ -239,19 +239,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6874056780256812727, guid: a52213ff04d5f4dafb5c0e305fd8ac36, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.83223546
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6874056780256812727, guid: a52213ff04d5f4dafb5c0e305fd8ac36, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6874056780256812727, guid: a52213ff04d5f4dafb5c0e305fd8ac36, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.55442244
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6874056780256812727, guid: a52213ff04d5f4dafb5c0e305fd8ac36, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6874056780256812727, guid: a52213ff04d5f4dafb5c0e305fd8ac36, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -259,11 +259,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6874056780256812727, guid: a52213ff04d5f4dafb5c0e305fd8ac36, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 67.342
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6874056780256812727, guid: a52213ff04d5f4dafb5c0e305fd8ac36, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7609100048394625506, guid: a52213ff04d5f4dafb5c0e305fd8ac36, type: 3}
+      propertyPath: m_EndVerticalOffset
+      value: -0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8402458312551644445, guid: a52213ff04d5f4dafb5c0e305fd8ac36, type: 3}
+      propertyPath: m_EndVerticalOffset
+      value: -8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
