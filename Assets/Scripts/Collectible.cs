@@ -11,9 +11,9 @@ public class Collectible : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
-        {
-            Destroy(gameObject);
-        }
+        // if (other.tag == "Player")
+        // {
+        //     Destroy(gameObject);
+        // }
     }
 }

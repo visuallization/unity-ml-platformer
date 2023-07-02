@@ -16,6 +16,8 @@ public class SimpleCharacterController : MonoBehaviour
     [Tooltip("Whether the character can jump")]
     public bool allowJump = true;
 
+    public LayerMask includeJumpRayLayerMask;
+
     // Checks if the player is jumping or falling but also if the player is on a slope greater then slopeLimit
     public bool IsGrounded { get; private set; }
     // Expects a value from -1 to 1 and controls forward movement.
@@ -54,7 +56,7 @@ public class SimpleCharacterController : MonoBehaviour
         float radius = transform.TransformVector(capsuleCollider.radius, 0f, 0f).magnitude;
         Ray ray = new Ray(capsuleBottom + transform.up * .01f, -transform.up);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, radius * 5f))
+        if (Physics.Raycast(ray, out hit, radius * 5f, includeJumpRayLayerMask))
         {
             float normalAngle = Vector3.Angle(hit.normal, transform.up);
             if (normalAngle < slopeLimit)

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5416013909274228209}
   - component: {fileID: 4331045062858949652}
   - component: {fileID: 5493626191094954968}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GameOverZone
   m_TagString: gameover
   m_Icon: {fileID: 0}
@@ -51,10 +51,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 7086514805723113623}
   - component: {fileID: 7584724346942689527}
   - component: {fileID: 975404677287614870}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Platform
   m_TagString: platform
   m_Icon: {fileID: 0}
@@ -213,6 +213,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5308462510879282467, guid: a52213ff04d5f4dafb5c0e305fd8ac36, type: 3}
+      propertyPath: resetArea
+      value: 
+      objectReference: {fileID: 5493626191094954968}
     - target: {fileID: 5308462510879282467, guid: a52213ff04d5f4dafb5c0e305fd8ac36, type: 3}
       propertyPath: startPlatform
       value: 

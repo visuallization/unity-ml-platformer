@@ -266,6 +266,9 @@ MonoBehaviour:
   turnSpeed: 300
   jumpSpeed: 10
   allowJump: 1
+  includeJumpRayLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &321266866309343554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,7 +328,7 @@ MonoBehaviour:
   rayHitColor: {r: 1, g: 0, b: 0, a: 1}
   rayMissColor: {r: 1, g: 1, b: 1, a: 1}
   m_StartVerticalOffset: 0.4
-  m_EndVerticalOffset: -0.4
+  m_EndVerticalOffset: -0.5
 --- !u!114 &5612259610320035373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,8 +388,9 @@ MonoBehaviour:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 4000
-  platformPrefab: {fileID: 1703101147579451556, guid: 4acdd45c6898fc14ab7a6ef8fc8b19f3, type: 3}
+  platformPrefab: {fileID: 2738722986273206547, guid: 4acdd45c6898fc14ab7a6ef8fc8b19f3, type: 3}
   startPlatform: {fileID: 0}
+  resetArea: {fileID: 0}
   platformSpawnDistance: 15
 --- !u!1 &4740414669880537242
 GameObject:
