@@ -26,6 +26,10 @@ public class AirPlatformerAgent: Agent
 
     void FixedUpdate() {
         UpdateRewardPerStep();
+
+        if (transform.localPosition.y < -1) {
+            EndEpisode();
+        }
     }
 
     /// <summary>
@@ -34,7 +38,8 @@ public class AirPlatformerAgent: Agent
     public override void Initialize()
     {
         base.Initialize();
-        // Random.InitState(42);
+
+        Random.InitState(42);
         boundaries = resetArea.bounds.size;
 	    boundaries.x = (boundaries.x - BOUNDARY_OFFSET) / transform.parent.localScale.x;
 	    boundaries.z = (boundaries.z - BOUNDARY_OFFSET) / transform.parent.localScale.x;

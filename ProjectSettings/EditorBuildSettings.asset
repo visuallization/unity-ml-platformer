@@ -5,10 +5,16 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
-    path: Assets/Scenes/AirPlatformerPlusBatchEnvs.unity
-    guid: 3af45923d4526c8ffa53054a8f73c0ec
   - enabled: 0
-    path: Assets/Scenes/AirPlatformerBatchEnvs.unity
-    guid: 2492b14ce48ce214390f03087a0a0dfa
+    path: Assets/Scenes/AirPlatformerPlus/BatchEnvs_16.unity
+    guid: 3af45923d4526c8ffa53054a8f73c0ec
+  - enabled: 1
+    path: Assets/Scenes/AirPlatformerPlus/BatchEnvs_32.unity
+    guid: ede8f74569fa1d2f6a4471fbc73d85af
+  - enabled: 0
+    path: Assets/Scenes/AirPlatformerPlus/BatchEnvs_64.unity
+    guid: 8b6b585136dd0b612963b39a3c8b646d
+  - enabled: 0
+    path: Assets/Scenes/AirPlatformerPlus/BatchEnvs_128.unity
+    guid: c99a797797a4f377797d14f300a047b8
   m_configObjects: {}
